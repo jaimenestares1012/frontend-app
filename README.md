@@ -15,3 +15,15 @@ Este proyecto utiliza **React** con **Vite** y requiere **Node.js** (v20 o super
 2. **Inicia el servidor de desarrollo:**
    npm run dev
 
+## MEJORAS
+
+- Agregar validaciones de formularios.
+- Validar que el usuario tenga permisos para acceder a la página.
+- Modales de errores
+- Mejor estructura de carpetas.
+- Mejor documentación.
+- Implementar test
+- Implementar CI/CD
+- Modularizar el código.
+
+## DESAFIOS

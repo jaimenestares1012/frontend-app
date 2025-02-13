@@ -5,7 +5,7 @@ import logo from "../../public/logo-123.png";
 import CustomerView from "../modules/customer/view/Customer";
 import ProductsView from "../modules/products/view/Products";
 import SalesView from "../modules/sales/view/Sales";
-import DashbardView from "../modules/dashboard/view/Dashboard";
+import DashboardView from "../modules/dashboard/view/Dashboard";
 export const Navigation = () => {
   return (
     <>
@@ -52,7 +52,7 @@ export const Navigation = () => {
             <Route path="/products" element={<ProductsView />} />
             <Route path="/customer" element={<CustomerView />} />
             <Route path="/sales" element={<SalesView />} />
-            <Route path="/dashboard" element={<DashbardView />} />
+            <Route path="/dashboard" element={<DashboardView />} />
             <Route path="/*" element={<Navigate to="/products" replace />} />
           </Routes>
         </div>

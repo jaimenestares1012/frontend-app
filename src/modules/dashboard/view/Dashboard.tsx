@@ -15,7 +15,7 @@ import SumaryPeriod from "../components/SumaryPeriod";
 import Sumary from "../components/sumary";
 import { getProducts } from "../../../store/product/thunk";
 import { getCustomers } from "../../../store/customer/thunk";
-export const DashbardView = () => {
+export const DashboardView = () => {
   const dispatch = useDispatch();
   const { catalogues } = useSelector((state) => state.catalogue);
   const { products } = useSelector((state) => state.product);
@@ -108,11 +108,11 @@ export const DashbardView = () => {
         })
       );
     }
-    if (customerObj) {  
+    if (customerObj) {
       dispatch(
         getMetricCostumerTrend({
           startPeriod: periodoStart.month,
-          endPeriod: periodoEnd.month,  
+          endPeriod: periodoEnd.month,
           idCustomer: customerObj,
         })
       );
@@ -144,4 +144,4 @@ export const DashbardView = () => {
   );
 };
 
-export default DashbardView;
+export default DashboardView;
