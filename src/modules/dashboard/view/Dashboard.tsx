@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import {
   getMetricTrend,
@@ -13,9 +13,13 @@ import { useSelector } from "react-redux";
 import { getCatalogs } from "../../../store/catalogue/thunk";
 import SumaryPeriod from "../components/SumaryPeriod";
 import Sumary from "../components/sumary";
+import { getProducts } from "../../../store/product/thunk";
+import { getCustomers } from "../../../store/customer/thunk";
 export const DashbardView = () => {
   const dispatch = useDispatch();
   const { catalogues } = useSelector((state) => state.catalogue);
+  const { products } = useSelector((state) => state.product);
+  const { customers } = useSelector((state) => state.customer);
   const [periodo, setPeriodo] = useState({
     id: "",
     month: "",
@@ -29,61 +33,97 @@ export const DashbardView = () => {
     id: "",
     month: "",
   });
+  const [productObj, setProductObj] = useState("");
+
+  const [customerObj, setCustomerObj] = useState("");
+
+  useEffect(() => {
+    dispatch(getCatalogs("cataloguesCode=periodList"));
+    dispatch(getProducts());
+    dispatch(getCustomers());
+  }, [dispatch]);
   useEffect(() => {
     if (catalogues?.periodList?.length > 0) {
       setPeriodo(catalogues.periodList[0]);
       setPeriodoStart(catalogues.periodList[0]);
-      setPeriodoEnd(catalogues.periodList[2]); // Actualiza el estado solo cuando haya periodos disponibles
+      setPeriodoEnd(catalogues.periodList[2]);
     }
   }, [catalogues]);
 
   useEffect(() => {
+    if (products?.length > 0) {
+      setProductObj(products[0]?.id);
+    }
+    if (customers?.length > 0) {
+      setCustomerObj(customers[0]?.id);
+    }
+  }, [products, customers]);
+
+  useEffect(() => {
+    dispatch(getMetricSalesAll());
+  }, []);
+
+  useEffect(() => {
     if (periodo) {
-      dispatch(
-        getMetricTrend({
-          startPeriod: periodoStart.month,
-          endPeriod: periodoStart.end,
-        })
-      );
       dispatch(getMetricProductSales({ period: periodo?.month }));
       dispatch(getMetricCustomerSales({ period: periodo?.month }));
       dispatch(getMetricSumary({ period: periodo?.month }));
-      dispatch(
-        getMetricProductTrend({
-          startPeriod: "2024-12",
-          endPeriod: "2025-02",
-          idProduct: "c6ac31cc-582d-44fd-8cac-6cdc74909e32",
-        })
-      );
-      dispatch(
-        getMetricCostumerTrend({
-          startPeriod: "2024-12",
-          endPeriod: "2025-02",
-          idProduct: "c6ac31cc-582d-44fd-8cac-6cdc74909e32",
-        })
-      );
-      dispatch(getMetricSalesAll());
     }
   }, [periodo]);
+
   useEffect(() => {
-    if (periodo) {
+    dispatch(
+      getMetricTrend({
+        startPeriod: periodoStart.month,
+        endPeriod: periodoEnd.month,
+      })
+    );
+    if (productObj) {
       dispatch(
-        getMetricTrend({
+        getMetricProductTrend({
           startPeriod: periodoStart.month,
           endPeriod: periodoEnd.month,
+          idProduct: productObj,
+        })
+      );
+    }
+    if (customerObj) {
+      dispatch(
+        getMetricCostumerTrend({
+          startPeriod: periodoStart.month,
+          endPeriod: periodoEnd.month,
+          idCustomer: customerObj,
         })
       );
     }
   }, [periodoStart, periodoEnd]);
+
   useEffect(() => {
-    dispatch(getCatalogs("cataloguesCode=periodList"));
-  }, [dispatch]);
+    if (productObj) {
+      dispatch(
+        getMetricProductTrend({
+          startPeriod: periodoStart.month,
+          endPeriod: periodoEnd.month,
+          idProduct: productObj,
+        })
+      );
+    }
+    if (customerObj) {  
+      dispatch(
+        getMetricCostumerTrend({
+          startPeriod: periodoStart.month,
+          endPeriod: periodoEnd.month,  
+          idCustomer: customerObj,
+        })
+      );
+    }
+  }, [customerObj, productObj]);
 
   return (
     <>
       <div>
         <h1 className="text-2xl text-white text-center mt-9">
-          Reporte de Metas y Demanda  
+          Reporte de Metas y Demanda
         </h1>
         {/*  */}
         <SumaryPeriod
@@ -91,6 +131,10 @@ export const DashbardView = () => {
           periodEnd={periodoEnd?.month}
           setPeriodoStart={setPeriodoStart}
           setPeriodoEnd={setPeriodoEnd}
+          productInit={productObj}
+          customerInit={customerObj}
+          setCustomerObj={setCustomerObj}
+          setProductObj={setProductObj}
         />
         <hr />
         <br />

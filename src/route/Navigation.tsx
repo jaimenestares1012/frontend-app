@@ -53,7 +53,7 @@ export const Navigation = () => {
             <Route path="/customer" element={<CustomerView />} />
             <Route path="/sales" element={<SalesView />} />
             <Route path="/dashboard" element={<DashbardView />} />
-            <Route path="/*" element={<Navigate to="/home" replace />} />
+            <Route path="/*" element={<Navigate to="/products" replace />} />
           </Routes>
         </div>
       </BrowserRouter>
